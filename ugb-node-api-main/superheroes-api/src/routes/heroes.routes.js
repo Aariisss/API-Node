@@ -6,6 +6,7 @@ const router = express.Router();
 const heroesController = require("../controllers/heroes.controllers.js");
 
 router.get("/", heroesController.list);
+router.post("/", heroesController.create);
 
 
 
