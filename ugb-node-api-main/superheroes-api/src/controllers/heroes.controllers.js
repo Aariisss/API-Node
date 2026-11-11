@@ -19,6 +19,61 @@ async function create(req, res){
         return res.status(201).json(hero);
     
 }
+
+async function update(req, res){
+    const { id } = req.params;
+    const { name, universe, power } = req.body;
+
+    if (!name || !universe || !power) {
+        return res.status(400).json({
+            message: "Nome, universo e poder são obrigatórios"
+        });
+    }
+
+    const hero = await Hero.findByPk(id);
+
+    if (!hero) {
+        return res.status(404).json({
+            message: "Herói não encontrado"
+        });
+    }
+    await hero.update({ name, universe, power });
+
+    return res.status(200).json(hero);
+}
+
+async function patch(req, res){
+    const { id } = req.params;
+    const dados = req.body
+
+    const hero = await Hero.findByPk(id);
+
+    if (!hero) {
+        return res.status(404).json({
+            message: "Herói não encontrado"
+        });
+    }
+    await hero.update(dados);
+
+    return res.status(200).json(hero)
+}
+
+async function remove(req, res) {
+    const { id } = req.params;
+
+    const hero = await Hero.findByPk(id);
+
+    if (!hero){
+        return res.status(404).json({
+            message: "Herói não encontrado"
+        });
+    }
+
+    await hero.destroy();
+
+    return res.status(204).send();
+}
+
 module.exports = {
-    list, create
+    list, create, update, patch, remove
 };
