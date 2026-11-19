@@ -1,11 +1,13 @@
 const express = require("express");
 const sequelize = require("./database/database");
+const cors = require('cors');
 
 const Hero = require("./models/Hero");
 const Movie = require("./models/Movie");
-const heroesRoutes = require("./routes/heroes.routes.js")
+
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 
 Hero.belongsToMany(Movie, {
@@ -16,7 +18,7 @@ Movie.belongsToMany(Hero, {
     through: "MoviesHero"
 })
 
-app.use("/heroes", heroesRoutes);
+app.use("/heroes", require("./routes/heroes.routes.js"));
 
 sequelize
     .sync()
@@ -24,7 +26,7 @@ sequelize
         console.log("Banco de Dados sincronizado.")
      })
     .catch((error) => {
-        console.log("Erro ao sincronizar o Bando", error)
+        console.log("Erro ao sincronizar o Banco de Dados", error)
      })
 
 module.exports = app;
